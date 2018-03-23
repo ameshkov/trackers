@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>
+    Search Trackers
+  </title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,500&amp;subset=cyrillic" rel="stylesheet">
+
+  <script type="text/javascript">
+
+    function printResponse(trackerData) {
+      console.log(trackerData);
+
+      if (!trackerData || !trackerData.trackerId) {
+        let tableHtml = `<tbody class="table-hover">
+        <tr>
+          <td colspan="2" class="text-center">Nothing found</td>
+        </tr>`;
+        document.getElementById('responseTable').innerHTML = tableHtml;
+      } else {
+        let tableHtml = `<tbody class="table-hover">
+        <tr>
+          <td class="text-left">Tracker ID</td>
+          <td class="text-left">${trackerData.trackerId || 'Not set'}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Tracker Name</td>
+          <td class="text-left">${trackerData.trackerName || 'Not set'}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Tracker Website</td>
+          <td class="text-left">${trackerData.trackerWebsiteUrl || 'Not set'}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Tracker Category</td>
+          <td class="text-left">${trackerData.category || 'Not set'}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Company Name</td>
+          <td class="text-left">${trackerData.companyName || 'Not set'}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Company Description</td>
+          <td class="text-left">${trackerData.companyDescription || 'Not set'}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Company Privacy Policy</td>
+          <td class="text-left">${trackerData.companyPrivacyPolicyUrl || 'Not set'}</td>
+        </tr>
+        <tr>
+          <td class="text-left">Company Website</td>
+          <td class="text-left">${trackerData.companyWebsiteUrl || 'Not set'}</td>
+        </tr>
+      </tbody>`;
+        document.getElementById('responseTable').innerHTML = tableHtml;
+      }
+    }
+
+    function fetchTrackerData() {
+      var domainName = document.getElementById('searchText').value;
+      if (!domainName) {
+        printResponse();
+      }
+
+      document.location.hash = domainName;
+      var url = '/tracker.json?domain=' + domainName;
+
+      fetch(url).then(function (response) {
+        return response.json();
+      }).then(function (responseJson) {
+        printResponse(responseJson);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      document.getElementById('search').addEventListener('submit', function (e) {
+        e.preventDefault();
+        fetchTrackerData();
+      });
+
+      if (document.location.hash) {
+        document.getElementById('searchText').value = document.location.hash.substr(1);
+        fetchTrackerData();
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <form id="search">
+      <div class="search-input">
+        <input id="searchText" type="text" class="search-input__input" placeholder="Search">
+        <input type="submit" value="search" class="search-input__submit">
+      </div>
+    </form>
+    <table id="responseTable" class="table-fill">
+
+    </table>
+  </div>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .container {
+      padding: 40px 0px;
+      width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flex;
+      display: -o-flex;
+      display: flex;
+    }
+
+    .search-input__input {
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 35px;
+      box-shadow: none;
+      padding: 18px 20px;
+      min-width: 420px;
+      border-radius: 3px 0px 0px 3px;
+      font-size: 18px;
+      border: 1px solid #d3d3d3;
+    }
+
+    .search-input__submit {
+      outline: none;
+      display: block;
+      text-transform: uppercase;
+      margin-bottom: 35px;
+      background: #C1C3D1;
+      width: 140px;
+      padding: 5px 0;
+      font-size: 15px;
+      cursor: pointer;
+      color: #fff;
+      border-radius: 0px 3px 3px 0px;
+    }
+
+
+    /*** Table Styles **/
+
+    .table-fill {
+      background: white;
+      border-radius: 3px;
+      border-collapse: collapse;
+      margin: auto;
+      max-width: 600px;
+      padding: 5px;
+      width: 100%;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      animation: float 5s infinite;
+    }
+
+    th {
+      color: #D5DDE5;
+      ;
+      background: #1b1e24;
+      border-bottom: 4px solid #9ea7af;
+      border-right: 1px solid #343a45;
+      font-size: 23px;
+      font-weight: 100;
+      padding: 24px;
+      text-align: left;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+      vertical-align: middle;
+    }
+
+    th:first-child {
+      border-top-left-radius: 3px;
+    }
+
+    th:last-child {
+      border-top-right-radius: 3px;
+      border-right: none;
+    }
+
+    tr {
+      border-top: 1px solid #C1C3D1;
+      border-bottom-: 1px solid #C1C3D1;
+      color: #666B85;
+      font-size: 16px;
+      font-weight: normal;
+      text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+    }
+
+    tr:hover td {
+      background: #4E5066;
+      color: #FFFFFF;
+      border-top: 1px solid #22262e;
+    }
+
+    tr:first-child {
+      border-top: none;
+    }
+
+    tr:last-child {
+      border-bottom: none;
+    }
+
+    tr:nth-child(odd) td {
+      background: #EBEBEB;
+    }
+
+    tr:nth-child(odd):hover td {
+      background: #4E5066;
+    }
+
+    tr:last-child td:first-child {
+      border-bottom-left-radius: 3px;
+    }
+
+    tr:last-child td:last-child {
+      border-bottom-right-radius: 3px;
+    }
+
+    td {
+      background: #FFFFFF;
+      padding: 20px;
+      text-align: left;
+      vertical-align: middle;
+      font-weight: 300;
+      font-size: 18px;
+      text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+      border-right: 1px solid #C1C3D1;
+    }
+
+    td:last-child {
+      border-right: 0px;
+    }
+
+    th.text-left {
+      text-align: left;
+    }
+
+    th.text-center {
+      text-align: center;
+    }
+
+    th.text-right {
+      text-align: right;
+    }
+
+    td.text-left {
+      text-align: left;
+    }
+
+    td.text-center {
+      text-align: center;
+    }
+
+    td.text-right {
+      text-align: right;
+    }
+  </style>
+</body>
+
+</html>

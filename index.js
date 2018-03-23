@@ -32,7 +32,7 @@ console.log('DB schema has been initialized');
 
 // Initialize Express
 const app = express();
-app.get('/', (req, res) => res.send('Go to /tracker.json?domain=DOMAIN_NAME'));
+app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
 app.get('/tracker.json', function (req, res) {
     let domain = req.query.domain;
     let row = db.prepare(SQL_SELECT_TRACKER).get(domain) || {};
