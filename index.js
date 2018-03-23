@@ -21,6 +21,7 @@ const SQL_SELECT_TRACKER =
   JOIN (SELECT ? AS domain) params
  WHERE td.domain = params.domain
     OR params.domain LIKE '%.' || td.domain;`;
+const SQL_SELECT_TRACKER_DOMAINS = "SELECT domain FROM tracker_domains WHERE tracker = ?";
 
 // Create the DB schema
 console.log('Initializing DB schema');
@@ -36,6 +37,14 @@ app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
 app.get('/tracker.json', function (req, res) {
     let domain = req.query.domain;
     let row = db.prepare(SQL_SELECT_TRACKER).get(domain) || {};
+    if (row.trackerId) {
+        row.domains = db.prepare(SQL_SELECT_TRACKER_DOMAINS)
+            .all(row.trackerId)
+            .map(function (domainRow) {
+                return domainRow.domain
+            });
+    }
+
     res.send(JSON.stringify(row, 0, 4));
 });
 
