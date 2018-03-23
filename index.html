@@ -6,13 +6,12 @@
   <title>
     Search Trackers
   </title>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,500&amp;subset=cyrillic" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,500&amp;subset=cyrillic" rel="stylesheet" />
+  <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet" />
+  <script type="text/javascript" src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
   <script type="text/javascript">
 
     function printResponse(trackerData) {
-      console.log(trackerData);
-
       if (!trackerData || !trackerData.trackerId) {
         let tableHtml = `<tbody class="table-hover">
         <tr>
@@ -66,8 +65,10 @@
 
       document.location.hash = domainName;
       var url = '/tracker.json?domain=' + domainName;
-
+      
+      NProgress.start();
       fetch(url).then(function (response) {
+        NProgress.done();
         return response.json();
       }).then(function (responseJson) {
         printResponse(responseJson);
